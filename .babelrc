@@ -1,0 +1,27 @@
+{
+  "presets": [
+    "next/babel",
+    "@zeit/next-typescript/babel",
+    "@babel/preset-typescript"
+  ],
+  "env": {
+    "test": {
+      "plugins": ["transform-dynamic-import"]
+    }
+  },
+  "plugins": [
+    [
+      "babel-plugin-styled-components",
+      {
+        "ssr": true
+      }
+    ],
+    [
+      "import",
+      {
+        "libraryName": "antd",
+        "style": true
+      }
+    ]
+  ]
+}
