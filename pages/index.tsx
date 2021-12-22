@@ -1,13 +1,10 @@
-import { Button } from "antd";
-import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import { useMoralis } from "react-moralis";
 import { LandingPageScreen } from "../containers/lading-page-screen";
-import styles from "../styles/Home.module.css";
+import { LandingPageLayout } from "../layout/LandingPageLayout";
 
-const Home: NextPage = () => {
+const Home = () => {
   return <LandingPageScreen />;
 };
+
+Home.Layout = LandingPageLayout as any;
 
 export default Home;

@@ -1,27 +1,41 @@
 import React from "react";
 import { Button, Col, Layout, Row, Typography } from "antd";
 import { useMoralis } from "react-moralis";
+import Link from "next/link";
+import styled from "styled-components";
+import theme from "@theme/main";
 
 const { Header, Footer, Sider, Content } = Layout;
 
-export const MainLayout = ({ children }) => {
+const LayoutStyled = styled(Layout)`
+  & .ant-layout-header {
+    background: ${theme.colors.main};
+  }
+`;
+
+export const LandingPageLayout = ({ children }) => {
   const { authenticate, isAuthenticated, logout, account, chainId } =
     useMoralis();
 
   return (
     <div>
-      <Layout>
+      <LayoutStyled>
         <Header>
           <Row align="middle">
             <Col flex="auto">
-              <Typography.Title style={{ color: "white" }} level={2}>
-                Crypto Cafe
-              </Typography.Title>
+              <Link href="/" passHref>
+                <Typography.Title level={2}>
+                  <a style={{ color: "white" }}>Crypto Cafe</a>
+                </Typography.Title>
+              </Link>
             </Col>
             <Col>
               <Button
+                type="primary"
                 onClick={() =>
-                  authenticate({ signingMessage: "Welcome to crypto cafe!" })
+                  authenticate({
+                    signingMessage: "Welcome to crypto cafe!",
+                  })
                 }
               >
                 Authenticate
@@ -31,7 +45,7 @@ export const MainLayout = ({ children }) => {
         </Header>
         <Content style={{ minHeight: "100vh" }}>{children}</Content>
         <Footer>Footer</Footer>
-      </Layout>
+      </LayoutStyled>
     </div>
   );
 };
