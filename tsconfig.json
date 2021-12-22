@@ -17,7 +17,11 @@
     "isolatedModules": true,
     "jsx": "preserve"
   },
-  "include": ["./scripts", "./test", "./typechain"],
-  "files": ["./hardhat.config.ts"],
+  "include": [
+    "./smart_contract/scripts",
+    "./smart_contract/test",
+    "./smart_contract/typechain"
+  ],
+  "files": ["./smart_contract/hardhat.config.ts"],
   "exclude": ["node_modules"]
 }
