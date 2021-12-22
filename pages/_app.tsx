@@ -1,8 +1,9 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { Button, ConfigProvider } from "antd";
+import { ConfigProvider } from "antd";
 import { MoralisProvider } from "react-moralis";
 import Head from "next/head";
+import { MainLayout } from "../layout";
 
 const APP_ID = process.env.NEXT_PUBLIC_MORALIS_APPLICATION_ID;
 const SERVER_URL = process.env.NEXT_PUBLIC_MORALIS_SERVER_URL;
@@ -25,7 +26,9 @@ function MyApp({ Component, pageProps }: AppProps) {
             content="initial-scale=1.0, width=device-width"
           />
         </Head>
-        <Component {...pageProps} />
+        <MainLayout>
+          <Component {...pageProps} />
+        </MainLayout>
       </ConfigProvider>
     </MoralisProvider>
   );

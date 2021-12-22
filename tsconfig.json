@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
+    "target": "es2019",
+    "module": "esnext",
     "strict": true,
     "esModuleInterop": true,
     "outDir": "dist",
@@ -17,11 +17,13 @@
     "isolatedModules": true,
     "jsx": "preserve"
   },
+  "compileOnSave": true,
   "include": [
-    "./smart_contract/scripts",
-    "./smart_contract/test",
-    "./smart_contract/typechain"
+    "next-env.d.ts",
+    "**/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**./*.d.ts"
   ],
-  "files": ["./smart_contract/hardhat.config.ts"],
   "exclude": ["node_modules"]
 }
