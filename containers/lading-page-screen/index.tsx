@@ -43,7 +43,7 @@ export const LandingPageScreen = () => {
                 borderRadius: "2rem",
               }}
             >
-              Anoucement!! We're close to opening the NFT public sale!
+              Anoucement!! We're opening the NFT private sale!
             </Title>
           </Col>
         </Row>
@@ -90,7 +90,7 @@ export const LandingPageScreen = () => {
                   level={2}
                   style={{ color: theme.colors.secondary }}
                 >
-                  Public sale will end in
+                  Private sale will end in
                 </Typography.Title>
               }
               value={deadline}

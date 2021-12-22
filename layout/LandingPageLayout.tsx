@@ -4,19 +4,21 @@ import { useMoralis } from "react-moralis";
 import Link from "next/link";
 import styled from "styled-components";
 import theme from "@theme/main";
+import Image from "next/image";
 
 const { Header, Footer, Sider, Content } = Layout;
 
 const LayoutStyled = styled(Layout)`
   & .ant-layout-header {
     background: ${theme.colors.main};
+    display: grid;
+    height: auto;
   }
 `;
 
 export const LandingPageLayout = ({ children }) => {
   const { authenticate, isAuthenticated, logout, account, chainId } =
     useMoralis();
-
 
   return (
     <div>
@@ -25,9 +27,23 @@ export const LandingPageLayout = ({ children }) => {
           <Row align="middle">
             <Col flex="auto">
               <Link href="/" passHref>
-                <Typography.Title level={2}>
-                  <a style={{ color: "white" }}>Crypto Cafe</a>
-                </Typography.Title>
+                <div style={{ cursor: "pointer" }}>
+                  <Row align="middle" gutter={4}>
+                    <Col>
+                      <div style={{ margin: 0, height: 50 }}>
+                        <Image src="/images/logo.png" width="50" height="50" />
+                      </div>
+                    </Col>
+                    <Col>
+                      <Typography.Title
+                        style={{ color: "white", margin: 0 }}
+                        level={4}
+                      >
+                        rypto Cafe
+                      </Typography.Title>
+                    </Col>
+                  </Row>
+                </div>
               </Link>
             </Col>
             <Col>

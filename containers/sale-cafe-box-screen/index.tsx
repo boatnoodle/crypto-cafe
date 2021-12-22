@@ -148,7 +148,7 @@ export const SaleCafeBoxScreen = () => {
                     level={2}
                     style={{ color: theme.colors.secondary }}
                   >
-                    Public sale will end in
+                    Private sale will end in
                   </Typography.Title>
                 }
                 value={deadline}
