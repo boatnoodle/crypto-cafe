@@ -1,7 +1,7 @@
 export default {
   colors: {
     main: "rgb(131, 85, 17)",
-    secondary: "#00AAFF",
+    secondary: "rgb(179 148 102)",
     hover: "#EFF9FF",
     dark: "#666666",
     medium: "#AEAEAE",

@@ -30,16 +30,19 @@ export const LandingPageLayout = ({ children }) => {
               </Link>
             </Col>
             <Col>
-              <Button
-                type="primary"
-                onClick={() =>
-                  authenticate({
-                    signingMessage: "Welcome to crypto cafe!",
-                  })
-                }
-              >
-                Authenticate
-              </Button>
+              {!isAuthenticated ? (
+                <Button
+                  onClick={() =>
+                    authenticate({ signingMessage: "Welcome to Crypto cafe!" })
+                  }
+                >
+                  Sigin with metamask wallet
+                </Button>
+              ) : (
+                <Button danger onClick={logout}>
+                  Logout
+                </Button>
+              )}
             </Col>
           </Row>
         </Header>
