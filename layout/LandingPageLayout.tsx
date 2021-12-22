@@ -17,6 +17,7 @@ export const LandingPageLayout = ({ children }) => {
   const { authenticate, isAuthenticated, logout, account, chainId } =
     useMoralis();
 
+
   return (
     <div>
       <LayoutStyled>
@@ -47,7 +48,11 @@ export const LandingPageLayout = ({ children }) => {
           </Row>
         </Header>
         <Content style={{ minHeight: "100vh" }}>{children}</Content>
-        <Footer>Footer</Footer>
+        <Footer style={{ textAlign: "center" }}>
+          <Typography.Title level={4}>
+            Copyright © 2021 CryptoCafe.
+          </Typography.Title>{" "}
+        </Footer>
       </LayoutStyled>
     </div>
   );

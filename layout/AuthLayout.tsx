@@ -1,49 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Col, Layout, Row, Typography } from "antd";
 import { useMoralis } from "react-moralis";
 import Link from "next/link";
+import { LandingPageLayout } from "./LandingPageLayout";
+import { useRouter } from "next/router";
 
 const { Header, Footer, Content } = Layout;
 
 export const AuthLayout = ({ children }) => {
+  const router = useRouter();
   const { authenticate, isAuthenticated, logout, account, chainId } =
     useMoralis();
 
-  return (
-    <div>
-      <Layout>
-        <Header>
-          <Row align="middle">
-            <Col flex="auto">
-              <Link href="/" passHref>
-                <Typography.Title level={2}>
-                  <a style={{ color: "white" }}>Crypto Cafe</a>
-                </Typography.Title>
-              </Link>
-            </Col>
+  useEffect(() => {
+    if (!isAuthenticated) authenticate({ onError: () => router.push("/") });
+  }, [isAuthenticated]);
 
-            <Col>
-              {!isAuthenticated ? (
-                <Button
-                  onClick={() =>
-                    authenticate({ signingMessage: "Welcome to Crypto cafe!" })
-                  }
-                >
-                  Sigin with metamask wallet
-                </Button>
-              ) : (
-                <Button danger onClick={logout}>
-                  Logout
-                </Button>
-              )}
-            </Col>
-          </Row>
-        </Header>
-        <Content style={{ minHeight: "100vh" }}>
-          {isAuthenticated ? children : <>Please sign in with metamask</>}
-        </Content>
-        <Footer>Footer</Footer>
-      </Layout>
-    </div>
+  return (
+    <LandingPageLayout>
+      {!isAuthenticated ? <>Signin with meatamask</> : children}
+    </LandingPageLayout>
   );
 };
