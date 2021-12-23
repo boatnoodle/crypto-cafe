@@ -153,7 +153,7 @@ export const cafeNFTAbi = [
   },
   {
     inputs: [],
-    name: "baseExtension",
+    name: "baseURI",
     outputs: [
       {
         internalType: "string",
@@ -166,7 +166,7 @@ export const cafeNFTAbi = [
   },
   {
     inputs: [],
-    name: "baseURI",
+    name: "cid",
     outputs: [
       {
         internalType: "string",
@@ -262,14 +262,9 @@ export const cafeNFTAbi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_mintAmount",
-        type: "uint256",
+        internalType: "string",
+        name: "_cid",
+        type: "string",
       },
     ],
     name: "mint",
@@ -433,19 +428,6 @@ export const cafeNFTAbi = [
       },
     ],
     name: "setApprovalForAll",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_newBaseExtension",
-        type: "string",
-      },
-    ],
-    name: "setBaseExtension",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

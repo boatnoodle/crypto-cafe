@@ -1,117 +1,139 @@
-import { Button, Col, Row, Table } from "antd";
-import React, { useEffect } from "react";
-import { useApiContract, useMoralis } from "react-moralis";
+import { Button, Col, notification, Row, Spin, Table } from "antd";
+import React, { useEffect, useState } from "react";
+import {
+  useApiContract,
+  useMoralis,
+  useMoralisCloudFunction,
+  useMoralisQuery,
+  useNewMoralisObject,
+  useWeb3ExecuteFunction,
+} from "react-moralis";
 import { Statistic, Typography } from "antd";
 import { cafeNFTAbi } from "../../abi/CafeNFT";
 import Image from "next/image";
-import Link from "next/link";
 import theme from "@theme/main";
+import { CafeNFT } from "constant";
+import axios from "smart-contract/node_modules/axios";
+import { weightRandom } from "utils";
+import { ButtonStyled } from "@components/Button";
+import { ResultModal } from "./components/ResultModal";
 const { Countdown } = Statistic;
 
 const { Title } = Typography;
 
 export const SaleCafeBoxScreen = () => {
-  const { account, chainId } = useMoralis();
+  const { user, account, chainId, isAuthenticated } = useMoralis();
+  const [visibleResultModal, setVisibleResultModal] = useState(false);
+  const [isFinished, setIsFinished] = useState(true);
+  const [tempRandCafeResult, setTempRandCafeResult] = useState(null);
+  const dataSource = CafeNFT?.map((each, index) => ({ ...each, key: index }));
 
-  const dataSource = [
-    {
-      key: "1",
-      image: "/images/cafe/1.jpeg",
-      name: "Cafe Tier 1",
-      capacity: 10,
-      employeeLimit: 1,
-      rate: 35,
-    },
-    {
-      key: "2",
-      image: "/images/cafe/2.jpeg",
-      name: "Cafe Tier 2",
-      capacity: 20,
-      employeeLimit: 2,
-      rate: 30,
-    },
-    {
-      key: "3",
-      image: "/images/cafe/3.jpeg",
-      name: "Cafe Tier 3",
-      capacity: 30,
-      employeeLimit: 3,
-      rate: 20,
-    },
-    {
-      key: "4",
-      image: "/images/cafe/4.jpeg",
-      name: "Cafe Tier 4",
-      capacity: 40,
-      employeeLimit: 4,
-      rate: 10,
-    },
-    {
-      key: "5",
-      image: "/images/cafe/5.jpeg",
-      name: "Cafe Tier 5",
-      capacity: 50,
-      employeeLimit: 5,
-      rate: 5,
-    },
-  ];
+  const {
+    fetch,
+    data: dataMinting,
+    error: errorMinting,
+    isLoading,
+    isFetching,
+  } = useWeb3ExecuteFunction();
 
-  const columns = [
-    {
-      title: "Cafe Image",
-      dataIndex: "image",
-      key: "image",
-      align: "center",
-      render: (text) => {
-        return <Image src={text} width="150" height="150" />;
+  const generateRandomCafeNFT = async () => {
+    setIsFinished(false);
+    const weights = CafeNFT?.map((each) => each.rate);
+    const { item: cafeDetail, index } = weightRandom(CafeNFT, weights) as any;
+
+    console.log(`You get cafe tier ${cafeDetail.tier}!!!`);
+
+    const metaData = {
+      path: `meta-data.json`,
+      content: {
+        image: `https://ipfs.moralis.io:2053/ipfs/QmR3CYUvu6vYr4wyfvnwZ424LPCbCYuowYgsM5qScJUeYU/cafe/${cafeDetail?.tier}.jpeg`,
+        name: `Cafe tier ${cafeDetail?.tier}`,
+        description: `This is a cafe tier ${cafeDetail?.tier}`,
+        attributes: [
+          {
+            trait_type: "Capacity",
+            value: cafeDetail?.capacity,
+          },
+          {
+            trait_type: "Employee Limit",
+            value: cafeDetail?.employeeLimit,
+          },
+        ],
       },
-    },
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Capacity",
-      dataIndex: "capacity",
-      key: "capacity",
-      align: "center",
-    },
-    {
-      title: "Employee Limit",
-      dataIndex: "employeeLimit",
-      key: "employeeLimit",
-      align: "center",
-      render: (text) => {
-        return `1/${text}`;
-      },
-    },
-    {
-      title: "Rate (%)",
-      dataIndex: "rate",
-      key: "rate",
-      align: "center",
-    },
-  ];
+    };
 
-  // const { runContractFunction, data, error, isLoading, isFetching } =
-  //   useApiContract({
-  //     abi: cafeNFTAbi,
-  //     address: process.env.NEXT_PUBLIC_CAFE_NFT_ADDRESS,
-  //     functionName: "balanceOf",
-  //     params: {
-  //       owner: account,
-  //     },
-  //     chain: chainId,
-  //   } as any);
+    try {
+      //Save to IPFS
+      const responseIPFS = await axios.post(
+        "https://deep-index.moralis.io/api/v2/ipfs/uploadFolder",
+        [metaData],
+        {
+          headers: {
+            "X-API-Key":
+              "UwzSuJkZMNzLXa0RMf78Zd2F6AevzM3mrK5MWFupZ1NijbA1PvOGJuzlNq3oUU9c",
+            accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-  // useEffect(() => {
-  //   runContractFunction();
-  // }, []);
+      const cid = responseIPFS?.data?.[0]?.path?.replace(
+        "https://ipfs.moralis.io:2053/ipfs/",
+        ""
+      );
+
+      console.log("CID is", cid);
+
+      await fetch({
+        params: {
+          abi: cafeNFTAbi,
+          contractAddress: "0x5e65747ac3e0Dc0B3952DEAd8FCf635E841026e1",
+          functionName: "mint",
+          params: { _cid: cid },
+          chain: chainId,
+        } as any,
+      });
+      setTempRandCafeResult(cafeDetail);
+      setIsFinished(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (errorMinting) {
+      setIsFinished(true);
+      console.log("enter");
+      notification["error"]({
+        message: "Your reject transection.",
+        description: `Building failed.`,
+      });
+    }
+  }, [errorMinting]);
+
+  useEffect(() => {
+    if (dataMinting && !isLoading && !isFetching) {
+      console.log(dataMinting, "dataMinting");
+      setVisibleResultModal(true);
+      notification["success"]({
+        message: "Build cafe already!",
+        description: `Congreaturation you minting success!`,
+      });
+    }
+  }, [dataMinting, isLoading, isFetching]);
+
   const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 1000 * 30; // Moment is also OK
 
   return (
     <div>
+      <ResultModal
+        cafeDetail={tempRandCafeResult}
+        visible={visibleResultModal}
+        onVisible={(visible) => {
+          if (!visible) setTempRandCafeResult(null);
+          setVisibleResultModal(visible);
+        }}
+      />
       <section
         style={{
           margin: "5rem 0",
@@ -119,26 +141,30 @@ export const SaleCafeBoxScreen = () => {
       >
         <Row justify="center" gutter={24}>
           <Col>
-            <Link href="/sale-cafe-box" passHref>
-              <div style={{ cursor: "pointer", textAlign: "center" }}>
-                <Image
-                  src="/images/landing-page/random-cafe-nft.png"
-                  width="250"
-                  height="250"
-                />
-                <Typography.Title
-                  level={2}
-                  style={{
-                    color: "white",
-                    background: "#835511",
-                    padding: "1rem",
-                    borderRadius: "2rem",
-                  }}
+            <Row justify="center" gutter={[0, 16]}>
+              <Col span={24}>
+                <div style={{ textAlign: "center" }}>
+                  {!isFinished ? (
+                    <Spin size="large" />
+                  ) : (
+                    <Image
+                      src="/images/landing-page/random-cafe-nft.png"
+                      width="250"
+                      height="250"
+                    />
+                  )}
+                </div>
+              </Col>
+              <Col>
+                <ButtonStyled
+                  disabled={!isFinished}
+                  type="link"
+                  onClick={generateRandomCafeNFT}
                 >
-                  0.05 ETH
-                </Typography.Title>
-              </div>
-            </Link>
+                  {!isFinished ? `BUILDING...` : `BUY (0.05 ETH)`}
+                </ButtonStyled>
+              </Col>
+            </Row>
           </Col>
           <Col style={{ textAlign: "center" }}>
             <div style={{ width: "350px" }}>
@@ -207,3 +233,40 @@ export const SaleCafeBoxScreen = () => {
     </div>
   );
 };
+const columns = [
+  {
+    title: "Cafe Image",
+    dataIndex: "image",
+    key: "image",
+    align: "center",
+    render: (text) => {
+      return <Image src={text} width="150" height="150" />;
+    },
+  },
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: "Capacity",
+    dataIndex: "capacity",
+    key: "capacity",
+    align: "center",
+  },
+  {
+    title: "Employee Limit",
+    dataIndex: "employeeLimit",
+    key: "employeeLimit",
+    align: "center",
+    render: (text) => {
+      return `1/${text}`;
+    },
+  },
+  {
+    title: "Rate (%)",
+    dataIndex: "rate",
+    key: "rate",
+    align: "center",
+  },
+];

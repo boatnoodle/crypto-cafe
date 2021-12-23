@@ -14,20 +14,6 @@ const { Title } = Typography;
 export const LandingPageScreen = () => {
   const { account, chainId } = useMoralis();
 
-  // const { runContractFunction, data, error, isLoading, isFetching } =
-  //   useApiContract({
-  //     abi: cafeNFTAbi,
-  //     address: process.env.NEXT_PUBLIC_CAFE_NFT_ADDRESS,
-  //     functionName: "balanceOf",
-  //     params: {
-  //       owner: account,
-  //     },
-  //     chain: chainId,
-  //   } as any);
-
-  // useEffect(() => {
-  //   runContractFunction();
-  // }, []);
   const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 1000 * 30; // Moment is also OK
 
   return (
@@ -43,7 +29,7 @@ export const LandingPageScreen = () => {
                 borderRadius: "2rem",
               }}
             >
-              Anoucement!! We're opening the NFT private sale!
+              Annoucement!! We're opening the NFT private sale!
             </Title>
           </Col>
         </Row>

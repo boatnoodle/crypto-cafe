@@ -29,7 +29,8 @@
     "**/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**./*.d.ts"
+    "**./*.d.ts",
+    "cloud/cafeNFT_function.js"
   ],
   "exclude": ["node_modules"]
 }

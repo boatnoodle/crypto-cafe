@@ -5,6 +5,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import theme from "@theme/main";
 import Image from "next/image";
+import { ButtonSecondaryStyled, ButtonStyled } from "@components/Button";
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -13,6 +14,7 @@ const LayoutStyled = styled(Layout)`
     background: ${theme.colors.main};
     display: grid;
     height: auto;
+    padding: 0.8rem 1rem;
   }
 `;
 
@@ -48,17 +50,39 @@ export const LandingPageLayout = ({ children }) => {
             </Col>
             <Col>
               {!isAuthenticated ? (
-                <Button
+                <ButtonSecondaryStyled
+                  style={{
+                    display: "grid",
+                    fontSize: "1.2rem",
+                    alignItems: "center",
+                  }}
                   onClick={() =>
                     authenticate({ signingMessage: "Welcome to Crypto cafe!" })
                   }
                 >
-                  Sigin with metamask wallet
-                </Button>
+                  <Row gutter={6} align="middle">
+                    <Col>
+                      <Image
+                        src="/images/landing-page/metamask-icon.png"
+                        width="30"
+                        height="30"
+                      />
+                    </Col>
+                    <Col>Sigin with metamask wallet</Col>
+                  </Row>
+                </ButtonSecondaryStyled>
               ) : (
-                <Button danger onClick={logout}>
+                <ButtonSecondaryStyled
+                  style={{
+                    display: "grid",
+                    fontSize: "1.2rem",
+                    alignItems: "center",
+                  }}
+                  danger
+                  onClick={logout}
+                >
                   Logout
-                </Button>
+                </ButtonSecondaryStyled>
               )}
             </Col>
           </Row>

@@ -22,7 +22,7 @@ contract CafeNFT is ERC721Enumerable, Ownable {
   using Strings for uint256;
 
   string public baseURI;
-  string public baseExtension = ".json";
+  string public cid;
   uint256 public cost = 0.05 ether;
   uint256 public maxSupply = 10000;
   uint256 public maxMintAmount = 20;
@@ -35,7 +35,6 @@ contract CafeNFT is ERC721Enumerable, Ownable {
     string memory _initBaseURI
   ) ERC721(_name, _symbol) {
     setBaseURI(_initBaseURI);
-    mint(msg.sender, 20);
   }
 
   // internal
@@ -44,22 +43,19 @@ contract CafeNFT is ERC721Enumerable, Ownable {
   }
 
   // public
-  function mint(address _to, uint256 _mintAmount) public payable {
+  function mint(string memory _cid) public payable {
     uint256 supply = totalSupply();
     require(!paused);
-    require(_mintAmount > 0);
-    require(_mintAmount <= maxMintAmount);
-    require(supply + _mintAmount <= maxSupply);
+    require(supply + 1 <= maxSupply);
 
     if (msg.sender != owner()) {
       if (whitelisted[msg.sender] != true) {
-        require(msg.value >= cost * _mintAmount);
+        require(msg.value >= cost);
       }
     }
 
-    for (uint256 i = 1; i <= _mintAmount; i++) {
-      _safeMint(_to, supply + i);
-    }
+    cid = _cid;
+    _safeMint(msg.sender, supply + 1);
   }
 
   function walletOfOwner(address _owner)
@@ -90,9 +86,7 @@ contract CafeNFT is ERC721Enumerable, Ownable {
     string memory currentBaseURI = _baseURI();
     return
       bytes(currentBaseURI).length > 0
-        ? string(
-          abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension)
-        )
+        ? string(abi.encodePacked(currentBaseURI, cid))
         : "";
   }
 
@@ -107,10 +101,6 @@ contract CafeNFT is ERC721Enumerable, Ownable {
 
   function setBaseURI(string memory _newBaseURI) public onlyOwner {
     baseURI = _newBaseURI;
-  }
-
-  function setBaseExtension(string memory _newBaseExtension) public onlyOwner {
-    baseExtension = _newBaseExtension;
   }
 
   function pause(bool _state) public onlyOwner {

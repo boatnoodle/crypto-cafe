@@ -1,0 +1,42 @@
+export const CafeNFT = [
+  {
+    tier: 1,
+    image: "/images/cafe/1.jpeg",
+    name: "Cafe Tier 1",
+    capacity: 10,
+    employeeLimit: 1,
+    rate: 0.35,
+  },
+  {
+    tier: 2,
+    image: "/images/cafe/2.jpeg",
+    name: "Cafe Tier 2",
+    capacity: 20,
+    employeeLimit: 2,
+    rate: 0.3,
+  },
+  {
+    tier: 3,
+    image: "/images/cafe/3.jpeg",
+    name: "Cafe Tier 3",
+    capacity: 30,
+    employeeLimit: 3,
+    rate: 0.2,
+  },
+  {
+    tier: 4,
+    image: "/images/cafe/4.jpeg",
+    name: "Cafe Tier 4",
+    capacity: 40,
+    employeeLimit: 4,
+    rate: 0.1,
+  },
+  {
+    tier: 5,
+    image: "/images/cafe/5.jpeg",
+    name: "Cafe Tier 5",
+    capacity: 50,
+    employeeLimit: 5,
+    rate: 0.05,
+  },
+];
