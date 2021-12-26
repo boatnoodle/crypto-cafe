@@ -10,6 +10,9 @@
     "deploy:cloud": "moralis-admin-cli watch-cloud-folder --moralisApiKey DboPH8ktrhFr3ab --moralisApiSecret R4kAK86Pt6rT0wU --moralisSubdomain yoxka8vckd1c.usemoralis.com --autoSave 1 --moralisCloudfolder /Users/boatnoodle/workspaces/crypto-cafe/cloud"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^4.4.1",
+    "@openzeppelin/contracts-upgradeable": "^4.4.1",
+    "@openzeppelin/hardhat-upgrades": "^1.12.0",
     "@ant-design/icons": "^4.7.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

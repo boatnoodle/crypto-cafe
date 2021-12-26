@@ -1,5 +1,5 @@
 import { Button, Col, notification, Row, Spin, Table } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   useApiContract,
   useMoralis,
@@ -29,7 +29,13 @@ export const SaleCafeBoxScreen = () => {
   const dataSource = CafeNFT?.map((each, index) => ({ ...each, key: index }));
 
   const {
-    fetch,
+    isSaving: isSavingCafeNFT,
+    error: errorSavingCafeNFT,
+    save: saveCafeNFT,
+  } = useNewMoralisObject("CafeNFT");
+
+  const {
+    fetch: mintCafeNFT,
     data: dataMinting,
     error: errorMinting,
     isLoading,
@@ -37,33 +43,43 @@ export const SaleCafeBoxScreen = () => {
   } = useWeb3ExecuteFunction();
 
   const generateRandomCafeNFT = async () => {
+    console.log("generateRandomCafeNFT");
     setIsFinished(false);
     const weights = CafeNFT?.map((each) => each.rate);
     const { item: cafeDetail, index } = weightRandom(CafeNFT, weights) as any;
+    const { tier, capacity, employeeLimit } = cafeDetail;
+    // console.log(`You get cafe tier ${tier}!!!`);
+    setTempRandCafeResult(cafeDetail);
 
-    console.log(`You get cafe tier ${cafeDetail.tier}!!!`);
+    const baseCafeObject = {
+      image: `https://ipfs.moralis.io:2053/ipfs/QmR3CYUvu6vYr4wyfvnwZ424LPCbCYuowYgsM5qScJUeYU/cafe/${tier}.jpeg`,
+      name: `Cafe tier ${tier}`,
+      description: `This is a cafe tier ${tier}`,
+    };
 
     const metaData = {
       path: `meta-data.json`,
       content: {
-        image: `https://ipfs.moralis.io:2053/ipfs/QmR3CYUvu6vYr4wyfvnwZ424LPCbCYuowYgsM5qScJUeYU/cafe/${cafeDetail?.tier}.jpeg`,
-        name: `Cafe tier ${cafeDetail?.tier}`,
-        description: `This is a cafe tier ${cafeDetail?.tier}`,
+        ...baseCafeObject,
         attributes: [
           {
+            trait_type: "tier",
+            value: tier,
+          },
+          {
             trait_type: "Capacity",
-            value: cafeDetail?.capacity,
+            value: capacity,
           },
           {
             trait_type: "Employee Limit",
-            value: cafeDetail?.employeeLimit,
+            value: employeeLimit,
           },
         ],
       },
     };
 
     try {
-      //Save to IPFS
+      //* Save metaData to IPFS.
       const responseIPFS = await axios.post(
         "https://deep-index.moralis.io/api/v2/ipfs/uploadFolder",
         [metaData],
@@ -82,9 +98,10 @@ export const SaleCafeBoxScreen = () => {
         ""
       );
 
-      console.log("CID is", cid);
+      // console.log("CID is", cid);
 
-      await fetch({
+      //* Mint NFT by smart contract
+      await mintCafeNFT({
         params: {
           abi: cafeNFTAbi,
           contractAddress: "0x5e65747ac3e0Dc0B3952DEAd8FCf635E841026e1",
@@ -93,7 +110,17 @@ export const SaleCafeBoxScreen = () => {
           chain: chainId,
         } as any,
       });
-      setTempRandCafeResult(cafeDetail);
+
+      //* Save to db.
+      await saveCafeNFT({
+        ...baseCafeObject,
+        level: 1,
+        openingHours: 5,
+        capacity,
+        employeeLimit,
+        user,
+      });
+
       setIsFinished(true);
     } catch (error) {
       console.log(error);
@@ -112,7 +139,7 @@ export const SaleCafeBoxScreen = () => {
   }, [errorMinting]);
 
   useEffect(() => {
-    if (dataMinting && !isLoading && !isFetching) {
+    if (dataMinting) {
       console.log(dataMinting, "dataMinting");
       setVisibleResultModal(true);
       notification["success"]({
@@ -120,12 +147,12 @@ export const SaleCafeBoxScreen = () => {
         description: `Congreaturation you minting success!`,
       });
     }
-  }, [dataMinting, isLoading, isFetching]);
+  }, [dataMinting]);
 
   const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 1000 * 30; // Moment is also OK
 
-  return (
-    <div>
+  const resultModal = useCallback(
+    () => (
       <ResultModal
         cafeDetail={tempRandCafeResult}
         visible={visibleResultModal}
@@ -134,6 +161,13 @@ export const SaleCafeBoxScreen = () => {
           setVisibleResultModal(visible);
         }}
       />
+    ),
+    [visibleResultModal, tempRandCafeResult]
+  );
+
+  return (
+    <div>
+      {resultModal()}
       <section
         style={{
           margin: "5rem 0",
