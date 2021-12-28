@@ -17,6 +17,7 @@ import axios from "smart-contract/node_modules/axios";
 import { weightRandom } from "utils";
 import { ButtonStyled } from "@components/Button";
 import { ResultModal } from "./components/ResultModal";
+import Moralis from "moralis";
 const { Countdown } = Statistic;
 
 const { Title } = Typography;
@@ -108,17 +109,26 @@ export const SaleCafeBoxScreen = () => {
           functionName: "mint",
           params: { _cid: cid },
           chain: chainId,
+          msgValue: Moralis.Units.ETH(0.05),
         } as any,
-      });
-
-      //* Save to db.
-      await saveCafeNFT({
-        ...baseCafeObject,
-        level: 1,
-        openingHours: 5,
-        capacity,
-        employeeLimit,
-        user,
+        onSuccess: async (response) => {
+          //* Save to db.
+          // console.log(response);
+          await saveCafeNFT({
+            ...baseCafeObject,
+            level: 1,
+            openingHours: 5,
+            capacity,
+            employeeLimit,
+            user,
+          });
+        },
+        onError: (err) => {
+          notification["error"]({
+            message: "Transaction failed",
+            description: `Please try again`,
+          });
+        },
       });
 
       setIsFinished(true);
@@ -128,19 +138,8 @@ export const SaleCafeBoxScreen = () => {
   };
 
   useEffect(() => {
-    if (errorMinting) {
-      setIsFinished(true);
-      console.log("enter");
-      notification["error"]({
-        message: "Your reject transection.",
-        description: `Building failed.`,
-      });
-    }
-  }, [errorMinting]);
-
-  useEffect(() => {
     if (dataMinting) {
-      console.log(dataMinting, "dataMinting");
+      // console.log(dataMinting, "dataMinting");
       setVisibleResultModal(true);
       notification["success"]({
         message: "Build cafe already!",
@@ -170,7 +169,10 @@ export const SaleCafeBoxScreen = () => {
       {resultModal()}
       <section
         style={{
-          margin: "5rem 0",
+          padding: "5rem 0",
+          backgroundImage: "url(/images/sale-box-cafe/bg-sale-box.jpg)",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <Row justify="center" gutter={24}>
@@ -206,7 +208,11 @@ export const SaleCafeBoxScreen = () => {
                 title={
                   <Typography.Title
                     level={2}
-                    style={{ color: theme.colors.secondary }}
+                    style={{
+                      color: theme.colors.secondary,
+                      background: "white",
+                      borderRadius: 8,
+                    }}
                   >
                     Private sale will end in
                   </Typography.Title>
@@ -215,7 +221,7 @@ export const SaleCafeBoxScreen = () => {
                 format="D [Day] H [Hour] m [Min] s [Sec]"
                 valueStyle={{
                   fontSize: "1.5rem",
-                  border: "2px solid #bbcd93",
+                  background: "#b39466b8",
                   padding: "0.4rem",
                 }}
               />
@@ -233,8 +239,7 @@ export const SaleCafeBoxScreen = () => {
       </section>
       <section
         style={{
-          margin: "2rem 0",
-          padding: "20px",
+          padding: "60px 20px",
           background: theme.colors.main,
         }}
       >

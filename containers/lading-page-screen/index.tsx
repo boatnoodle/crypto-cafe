@@ -1,4 +1,4 @@
-import { Button, Col, Row } from "antd";
+import { BackTop, Button, Col, Row } from "antd";
 import React, { useEffect } from "react";
 import { useApiContract, useMoralis } from "react-moralis";
 import { Statistic, Typography } from "antd";
@@ -7,6 +7,8 @@ import { Slider } from "./components/Slider";
 import Image from "next/image";
 import Link from "next/link";
 import theme from "@theme/main";
+import { UpOutlined } from "@ant-design/icons";
+import { ButtonStyled } from "@components/Button";
 const { Countdown } = Statistic;
 
 const { Title } = Typography;
@@ -18,6 +20,26 @@ export const LandingPageScreen = () => {
 
   return (
     <div>
+      <section
+        style={{
+          padding: "5rem 0",
+          backgroundImage: "url(/images/landing-page/bg-landing-page.jpg)",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          minHeight: "500px",
+        }}
+      >
+        <Row justify="center" gutter={24}>
+          <Col>
+            <Typography.Title
+              level={1}
+              style={{ fontSize: "5rem", fontWeight: "bold", color: "#835511" }}
+            >
+              Crypto Cafe
+            </Typography.Title>
+          </Col>
+        </Row>
+      </section>
       <section>
         <Row justify="center" style={{ margin: "2rem" }}>
           <Col>
@@ -116,6 +138,22 @@ export const LandingPageScreen = () => {
           </Col>
         </Row>
       </section>
+      <BackTop>
+        <ButtonStyled
+          style={{
+            height: 40,
+            width: 40,
+            padding: 0,
+            display: "grid",
+            alignItems: "center",
+            borderRadius: "50%",
+            textAlign: "center",
+            fontSize: 14,
+          }}
+        >
+          <UpOutlined />
+        </ButtonStyled>
+      </BackTop>
     </div>
   );
 };

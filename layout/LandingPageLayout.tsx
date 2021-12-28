@@ -1,13 +1,13 @@
 import React from "react";
-import { Button, Col, Layout, Row, Typography } from "antd";
+import { Col, Layout, Menu, Row, Typography } from "antd";
 import { useMoralis } from "react-moralis";
 import Link from "next/link";
 import styled from "styled-components";
 import theme from "@theme/main";
 import Image from "next/image";
-import { ButtonSecondaryStyled, ButtonStyled } from "@components/Button";
+import { ButtonDangerStyled, ButtonSecondaryStyled } from "@components/Button";
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Footer, Content } = Layout;
 
 const LayoutStyled = styled(Layout)`
   & .ant-layout-header {
@@ -18,16 +18,25 @@ const LayoutStyled = styled(Layout)`
   }
 `;
 
+const MenuStyled = styled(Menu)`
+  && {
+    background: transparent;
+  }
+  && .ant-menu-item-selected,
+  &&& li:hover {
+    background-color: ${theme.colors.secondary};
+  }
+`;
+
 export const LandingPageLayout = ({ children }) => {
-  const { authenticate, isAuthenticated, logout, account, chainId } =
-    useMoralis();
+  const { authenticate, isAuthenticated, logout, user } = useMoralis();
 
   return (
     <div>
       <LayoutStyled>
-        <Header>
-          <Row align="middle">
-            <Col flex="auto">
+        <Header style={{ position: "fixed", zIndex: 999, width: "100%" }}>
+          <Row align="middle" gutter={16}>
+            <Col>
               <Link href="/" passHref>
                 <div style={{ cursor: "pointer" }}>
                   <Row align="middle" gutter={4}>
@@ -47,6 +56,24 @@ export const LandingPageLayout = ({ children }) => {
                   </Row>
                 </div>
               </Link>
+            </Col>
+            <Col flex="auto">
+              <MenuStyled
+                theme="dark"
+                mode="horizontal"
+                defaultSelectedKeys={["2"]}
+              >
+                <Menu.Item>
+                  <Link href="sale-cafe-box">{`Sale Cafe`}</Link>
+                </Menu.Item>
+                <Menu.Item>
+                  <Link href="my-cafe">{`My Cafe`}</Link>
+                </Menu.Item>
+                <Menu.Item>
+                  <Link href="whitepaper">{`White paper`}</Link>
+                </Menu.Item>
+                <Menu.Item disabled>{`Marketplace (Coming soon)`}</Menu.Item>
+              </MenuStyled>
             </Col>
             <Col>
               {!isAuthenticated ? (
@@ -72,7 +99,7 @@ export const LandingPageLayout = ({ children }) => {
                   </Row>
                 </ButtonSecondaryStyled>
               ) : (
-                <ButtonSecondaryStyled
+                <ButtonDangerStyled
                   style={{
                     display: "grid",
                     fontSize: "1.2rem",
@@ -82,12 +109,14 @@ export const LandingPageLayout = ({ children }) => {
                   onClick={logout}
                 >
                   Logout
-                </ButtonSecondaryStyled>
+                </ButtonDangerStyled>
               )}
             </Col>
           </Row>
         </Header>
-        <Content style={{ minHeight: "100vh" }}>{children}</Content>
+        <Content style={{ minHeight: "100vh", marginTop: 90 }}>
+          {children}
+        </Content>
         <Footer style={{ textAlign: "center" }}>
           <Typography.Title level={4}>
             Copyright © 2021 CryptoCafe.

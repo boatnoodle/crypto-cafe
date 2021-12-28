@@ -4,6 +4,7 @@ import theme from "theme/main";
 
 export const ButtonStyled = styled(Button)`
   background: ${theme.colors.main};
+  border-color: ${theme.colors.main};
   color: white;
   border-radius: 2rem;
   padding: 0 1.4rem;
@@ -14,6 +15,7 @@ export const ButtonStyled = styled(Button)`
   :active,
   :focus,
   :hover {
+    border-color: ${theme.colors.secondary};
     background: ${theme.colors.secondary};
     color: white;
   }
@@ -38,6 +40,7 @@ export const ButtonSecondaryStyled = styled(Button)`
 `;
 
 export const ButtonDangerStyled = styled(Button)`
+  border-color: ${theme.colors.main};
   background: ${theme.colors.secondary};
   color: white;
   border-radius: 2rem;
