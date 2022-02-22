@@ -1,14 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMoralis, useMoralisQuery } from "react-moralis";
 
 export const MyCafeScreen = () => {
-  const { user } = useMoralis();
+  const { user, isAuthenticating } = useMoralis();
 
-  const { data, error, isLoading } = useMoralisQuery("CafeNFT", (query) =>
-    query.equalTo("user", user)
+  const { fetch, data, error, isLoading } = useMoralisQuery(
+    "CafeNFT",
+    (query) => query.equalTo("user", "qTk35JRVqJEZKtGwvSXspFhV"),
+    [],
+    { autoFetch: false }
   );
-  console.log("data", data);
-  console.log("isLoading", isLoading);
+
+  if (!user && isAuthenticating) return <>Loading...</>;
+
+  useEffect(() => {
+    if (user && !isAuthenticating) {
+      console.log("fetch!");
+      console.log(user.toJSON());
+      fetch();
+    }
+    return () => {};
+  }, [user, isAuthenticating]);
+
+  useEffect(() => {
+    if (data?.length > 0) {
+      console.log("data!", data);
+    }
+    return () => {};
+  }, [data]);
 
   return <div>MyCafeScreen</div>;
 };

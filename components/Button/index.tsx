@@ -2,7 +2,7 @@ import { Button } from "antd";
 import styled from "styled-components";
 import theme from "theme/main";
 
-export const ButtonStyled = styled(Button)`
+export const ButtonStyled: any = styled(Button)`
   background: ${theme.colors.main};
   border-color: ${theme.colors.main};
   color: white;
@@ -21,7 +21,7 @@ export const ButtonStyled = styled(Button)`
   }
 `;
 
-export const ButtonSecondaryStyled = styled(Button)`
+export const ButtonSecondaryStyled: any = styled(Button)`
   background: ${theme.colors.secondary};
   color: white;
   border-radius: 2rem;
@@ -39,7 +39,7 @@ export const ButtonSecondaryStyled = styled(Button)`
   }
 `;
 
-export const ButtonDangerStyled = styled(Button)`
+export const ButtonDangerStyled: any = styled(Button)`
   border-color: ${theme.colors.main};
   background: ${theme.colors.secondary};
   color: white;

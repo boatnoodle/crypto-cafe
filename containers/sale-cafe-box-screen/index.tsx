@@ -262,7 +262,7 @@ export const SaleCafeBoxScreen = () => {
           <Col span={18}>
             <Table
               dataSource={dataSource}
-              columns={columns}
+              columns={columns as any}
               pagination={false}
             />
             ;
@@ -278,7 +278,7 @@ const columns = [
     dataIndex: "image",
     key: "image",
     align: "center",
-    render: (text) => {
+    render: (text: any) => {
       return <Image src={text} width="150" height="150" />;
     },
   },
@@ -298,7 +298,7 @@ const columns = [
     dataIndex: "employeeLimit",
     key: "employeeLimit",
     align: "center",
-    render: (text) => {
+    render: (text: any) => {
       return `1/${text}`;
     },
   },

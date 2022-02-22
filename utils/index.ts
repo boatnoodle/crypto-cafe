@@ -1,4 +1,4 @@
-export const weightRandom = (items, weights) => {
+export const weightRandom = (items: any, weights: any) => {
   /**
    * Picks the random item based on its weight.
    * The items with higher weight will be picked more often (with a higher probability).
@@ -25,7 +25,7 @@ export const weightRandom = (items, weights) => {
   // For example:
   // - weights = [1, 4, 3]
   // - cumulativeWeights = [1, 5, 8]
-  const cumulativeWeights = [];
+  const cumulativeWeights = [] as any;
   for (let i = 0; i < weights.length; i += 1) {
     cumulativeWeights[i] = weights[i] + (cumulativeWeights[i - 1] || 0);
   }

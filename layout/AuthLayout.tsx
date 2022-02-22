@@ -3,7 +3,7 @@ import { useMoralis } from "react-moralis";
 import { LandingPageLayout } from "./LandingPageLayout";
 import { useRouter } from "next/router";
 
-export const AuthLayout = ({ children }) => {
+export const AuthLayout: React.FC = ({ children }) => {
   const router = useRouter();
   const { isInitialized, authenticate, isAuthenticated } = useMoralis();
 

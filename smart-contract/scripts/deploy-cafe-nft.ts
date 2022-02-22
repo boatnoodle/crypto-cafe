@@ -1,4 +1,4 @@
-import { ethers, upgrades } from "hardhat";
+import { ethers } from "hardhat";
 
 async function main() {
   const CafeNFT = await ethers.getContractFactory("CafeNFT");

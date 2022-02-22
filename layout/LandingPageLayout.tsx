@@ -28,7 +28,7 @@ const MenuStyled = styled(Menu)`
   }
 `;
 
-export const LandingPageLayout = ({ children }) => {
+export const LandingPageLayout: React.FC = ({ children }) => {
   const { authenticate, isAuthenticated, logout, user } = useMoralis();
 
   return (
