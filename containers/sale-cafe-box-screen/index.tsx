@@ -13,7 +13,7 @@ import { cafeNFTAbi } from "../../abi/CafeNFT";
 import Image from "next/image";
 import theme from "@theme/main";
 import { CafeNFT } from "constant";
-import axios from "smart-contract/node_modules/axios";
+import axios from "axios";
 import { weightRandom } from "utils";
 import { ButtonStyled } from "@components/Button";
 import { ResultModal } from "./components/ResultModal";
